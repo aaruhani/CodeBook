@@ -1,0 +1,68 @@
+   public static void SendTextMessage(string cellphone,string carrier)
+        {
+            try
+            {
+                string subject = "MY TEXT MESSAGE FROM EMAIL";
+                string body = "TEXING YOU VIA EMAIL GATEWAY";
+                SendMailMessage(ConvertToSMSAddress(cellphone, carrier), subject, body);
+            }
+            catch (Exception ee)
+            {
+            }
+        }
+        public static string ConvertToSMSAddress(string Number, string PhoneCarrier)
+        {
+            switch (PhoneCarrier)
+            {
+                case "ATT":
+                    return (Number + "@txt.att.net");
+
+                case "TMOBILE":
+                    return (Number + "@tmomail.net");
+
+                case "LYCAMOBILE":
+                    return (Number + "@tmomail.net");
+
+                case "VERIZON":
+                    return (Number + "@vtext.com");
+
+                case "SPRINT":
+                    return (Number + "@messaging.sprintpcs.com");
+
+                case "NEXTEL":
+                    return (Number + "@messaging.nextel.com");
+
+                case "ALLTEL":
+                    return (Number + "@message.alltel.com");
+
+                case "VIRGINMOBILE":
+                    return (Number + "@vmobl.com");
+
+                case "USCellular":
+                    return (Number + "@email.uscc.net");
+
+                case "BOOSTMOBILE":
+                    return (Number + "@myboostmobile.com");
+
+                case "METRO":
+                    return (Number + "@mymetropcs.com");
+
+                case "SIMPLEMOBILE":
+                    return (Number + "@smtext.com");
+            }
+            return "defaultemail@nocarrier.com";
+        }
+       
+        public static void SendMailMessage(string sendTo, string subject, string body)
+        {
+            MailAddress from = new MailAddress("from@email.com");
+            MailAddress to = new MailAddress(sendTo);
+            MailMessage message = new MailMessage(from, to)
+            {
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true,
+                Priority = MailPriority.High
+            };
+            new SmtpClient { Host = "smtp.yourclient.com", Credentials = new NetworkCredential(from.Address, "yourpassword"), EnableSsl = true }.Send(message);
+        }

@@ -1,0 +1,24 @@
+ public static MvcHtmlString EnumDropDownListFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression,Type TEnum, object htmlAttributes)
+        {
+            ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
+            Type enumType = TEnum;
+            var values = Enum.GetValues(enumType);
+            //IEnumerable<T> values = Enum.GetValues(enumType).Cast<TEnum>();
+            //Enum.GetValues(enumType).Cast<
+
+            
+            IEnumerable<SelectListItem> items = from Enum value in values
+                                                select new SelectListItem
+                                                {
+                                                    Text = GetEnumDescription(value),
+                                                    Value = Convert.ToInt32((Enum.Parse(enumType,value.ToString()))).ToString(),
+                                                    Selected = value.Equals(metadata.Model)
+                                                };
+
+            // If the enum is nullable, add an 'empty' item to the collection
+            if (metadata.IsNullableValueType)
+                items = SingleEmptyItem.Concat(items);
+            
+            return htmlHelper.DropDownListFor(expression, items,"--Select--", htmlAttributes);
+
+        }
